@@ -1,14 +1,13 @@
-FROM registry.cn-shanghai.aliyuncs.com/lwmeng/node:lts-alpine as build-stage
-WORKDIR /app
-COPY package*.json ./
-RUN npm install -g cnpm --registry=https://registry.npmmirror.com
-RUN cnpm install
-COPY . .
-RUN npm run build:prod
+#FROM node:latest AS build
+#ENV NODE_OPTIONS=--openssl-legacy-provider
 
-# production stage
-FROM registry.cn-shanghai.aliyuncs.com/lwmeng/nginx
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+#WORKDIR /build
+#COPY . .
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+#RUN npm install && \
+#    npm run build:prod
+
+FROM nginx
+
+COPY ./dist /usr/share/nginx/html
+
